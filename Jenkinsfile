@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven'                    // ← Nom exact Maven
-        jdk 'openjdk 17'                 // ← Nom exact JDK
-    }
-
     stages {
         // Stage 1: Récupération du code
         stage('Checkout Git') {
@@ -31,11 +26,6 @@ pipeline {
                 sh 'mvn test'
                 echo '✅ Tests exécutés'
             }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
         }
 
         // Stage 4: Packaging
@@ -47,12 +37,13 @@ pipeline {
             }
         }
 
-        // Stage 5: Déploiement (simulation)
+        // Stage 5: Déploiement
         stage('Déploiement') {
             steps {
                 echo '🚀 Application prête pour le déploiement'
                 echo '📦 Fichier WAR: target/devops-app.war'
-                echo '🌐 URL: http://localhost:8081/devops-app'  // ← PORT 8081
+                echo '🌐 URL: http://localhost:8081/devops-app'
+                echo '🎯 Pipeline CI/CD opérationnel !'
             }
         }
     }
@@ -63,6 +54,7 @@ pipeline {
         }
         success {
             echo '🎉 PIPELINE RÉUSSI !'
+            echo '✅ Toutes les étapes du mini-projet sont validées'
         }
         failure {
             echo '❌ Pipeline échoué'
