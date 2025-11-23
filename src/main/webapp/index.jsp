@@ -82,5 +82,10 @@
         <p>Application déployée avec pipeline CI/CD</p>
     </div>
 </div>
+
+<div style="background: #27ae60; color: white; padding: 15px; border-radius: 5px; margin: 20px 0;">
+    <h2>🌟 NOUVELLE FONCTIONNALITÉ !</h2>
+    <p>Cette fonctionnalité a été ajoutée dans la branche new_feature</p>
+</div>
 </body>
 </html>
