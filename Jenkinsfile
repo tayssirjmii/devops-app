@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven '          // ← CHANGÉ
-        jdk 'openjdk-17'           // ← CHANGÉ
-    }
-
     stages {
         // Stage 1: Récupération du code
         stage('Checkout Git') {
@@ -31,11 +26,6 @@ pipeline {
                 sh 'mvn test'
                 echo '✅ Tests exécutés'
             }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
         }
 
         // Stage 4: Packaging
@@ -47,7 +37,7 @@ pipeline {
             }
         }
 
-        // Stage 5: Déploiement (simulation)
+        // Stage 5: Déploiement
         stage('Déploiement') {
             steps {
                 echo '🚀 Application prête pour le déploiement'
