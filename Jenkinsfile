@@ -28,7 +28,32 @@ pipeline {
             }
         }
 
-        // Stage 4: Packaging
+        // 🆕 AJOUT: Stage 4 - Analyse SAST avec SonarQube
+        stage('SAST - SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh '''
+                    mvn sonar:sonar \
+                      -Dsonar.projectKey=devops-app \
+                      -Dsonar.projectName="DevOps Application - ISET Kairouan" \
+                      -Dsonar.sources=src/main/java \
+                      -Dsonar.java.binaries=target/classes \
+                      -Dsonar.host.url=http://192.168.74.128:9000
+                    '''
+                }
+            }
+        }
+
+        // 🆕 AJOUT: Stage 5 - Quality Gate
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        // Stage 6: Packaging (ancien Stage 4)
         stage('Package') {
             steps {
                 sh 'mvn package -DskipTests'
@@ -37,7 +62,7 @@ pipeline {
             }
         }
 
-        // Stage 5: Déploiement
+        // Stage 7: Déploiement (ancien Stage 5)
         stage('Déploiement') {
             steps {
                 echo '🚀 Application prête pour le déploiement'
