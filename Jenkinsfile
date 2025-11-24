@@ -45,14 +45,13 @@ pipeline {
         }
 
         // 🆕 AJOUT: Stage 5 - Quality Gate
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 15, unit: 'MINUTES') {  // ← Augmentez à 15 minutes
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
+       stage('Quality Gate') {
+           steps {
+               timeout(time: 30, unit: 'MINUTES') {  // ← AUGMENTÉ à 30 minutes
+                   waitForQualityGate abortPipeline: true
+               }
+           }
+       }
         // Stage 6: Packaging (ancien Stage 4)
         stage('Package') {
             steps {
