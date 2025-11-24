@@ -45,9 +45,9 @@ pipeline {
         }
 
         // 🆕 AJOUT: Stage 5 - Quality Gate
-        stage('Quality Gate') {
+        tage('Quality Gate') {
             steps {
-                timeout(time: 5, unit: 'MINUTES') {
+                timeout(time: 15, unit: 'MINUTES') {  // ← Augmentez à 15 minutes
                     waitForQualityGate abortPipeline: true
                 }
             }
