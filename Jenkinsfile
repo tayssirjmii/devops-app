@@ -66,38 +66,39 @@ pipeline {
 
         // Stage 7: Déploiement (ancien Stage 5)
         stage('Déploiement Tomcat') {
-            steps {
-                script {
-                    // Vérifier que Tomcat est démarré
-                    sh 'curl -I http://localhost:8080 || /opt/tomcat/bin/startup.sh'
+                    steps {
+                        script {
+                            // Vérifier que Tomcat est démarré
+                            sh 'curl -I http://localhost:8080 || /opt/tomcat/bin/startup.sh'
 
-                    // Attendre que Tomcat soit complètement démarré
-                    sleep 30
+                            // Attendre que Tomcat soit complètement démarré
+                            sleep 30
 
-                    // Déployer l'application via le manager Tomcat
-                    sh '''
-                    curl -u deployer:deployer123 \
-                         -X PUT \
-                         -F "file=@target/devops-app.war" \
-                         "http://localhost:8080/manager/text/deploy?path=/devopsapp&update=true"
-                    '''
+                            // Déployer l'application via le manager Tomcat
+                            sh '''
+                            curl -u deployer:deployer123 \
+                                 -X PUT \
+                                 -F "file=@target/devops-app.war" \
+                                 "http://localhost:8080/manager/text/deploy?path=/devopsapp&update=true"
+                            '''
 
-                    echo '🎉 Application DÉPLOYÉE sur Tomcat!'
-                    echo '🌐 Accédez à: http://localhost:8080/devopsapp'
+                            echo '🎉 Application DÉPLOYÉE sur Tomcat!'
+                            echo '🌐 Accédez à: http://localhost:8080/devopsapp'
+                        }
+                    }
+                }
+            }  // ← GARDER seulement CETTE accolade (ferme 'stages')
+
+            post {
+                always {
+                    echo '🔚 Pipeline terminé'
+                }
+                success {
+                    echo '🎉 PIPELINE RÉUSSI !'
+                    echo '✅ Toutes les étapes du mini-projet sont validées'
+                }
+                failure {
+                    echo '❌ Pipeline échoué'
                 }
             }
         }
-
-    post {
-        always {
-            echo '🔚 Pipeline terminé'
-        }
-        success {
-            echo '🎉 PIPELINE RÉUSSI !'
-            echo '✅ Toutes les étapes du mini-projet sont validées'
-        }
-        failure {
-            echo '❌ Pipeline échoué'
-        }
-    }
-}
