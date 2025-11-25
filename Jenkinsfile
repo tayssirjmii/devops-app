@@ -65,15 +65,28 @@ pipeline {
         }
 
         // Stage 7: Déploiement (ancien Stage 5)
-        stage('Déploiement') {
+        stage('Déploiement Tomcat') {
             steps {
-                echo '🚀 Application prête pour le déploiement'
-                echo '📦 Fichier WAR: target/devops-app.war'
-                echo '🌐 URL: http://localhost:8081/devops-app'
-                echo '🎯 Pipeline CI/CD opérationnel !'
+                script {
+                    // Vérifier que Tomcat est démarré
+                    sh 'curl -I http://localhost:8080 || /opt/tomcat/bin/startup.sh'
+
+                    // Attendre que Tomcat soit complètement démarré
+                    sleep 30
+
+                    // Déployer l'application via le manager Tomcat
+                    sh '''
+                    curl -u deployer:deployer123 \
+                         -X PUT \
+                         -F "file=@target/devops-app.war" \
+                         "http://localhost:8080/manager/text/deploy?path=/devopsapp&update=true"
+                    '''
+
+                    echo '🎉 Application DÉPLOYÉE sur Tomcat!'
+                    echo '🌐 Accédez à: http://localhost:8080/devopsapp'
+                }
             }
         }
-    }
 
     post {
         always {
